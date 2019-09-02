@@ -201,13 +201,11 @@ def rss_crd_max(tra_filename):
     return fp_coor, max_rss
 
 
-# 实现聚类
+# 实现聚类 待完善
 def k_means(f_rss):
     max_itor = 50
 
     pass
-
-# 高斯滤波预处理 RSS属于(u-o，u+o) 效果不佳
 
 # 按照参考点生成指纹库 每个参考点对应一个指纹 原方法
 # def rss_crd(tra_filename):
@@ -456,12 +454,7 @@ def rss_crd_rmse(tra_filename):
     return fp_coor, final_fp
 
 
-# def normalization(data):
-#     _range = np.max(data) - np.min(data)
-#     return (data - np.min(data)) / _range
-
-
-# 引入strong AP 概念 RSS + P 效果较好(Fisher准则 效果不佳)
+# 引入strong AP 概念 RSS + P 效果较好(Fisher准则 效果不佳 待测试及总结)
 def AP_r_get(tra_filename):
     """
     :param tra_filename: 训练集文件名
@@ -640,7 +633,7 @@ def floor_filter(tra, floor):
     return f_c_tra
 
 
-# 获取训练集对应的r参数字典
+# 获取训练集对应的r参数字典（效果不同距离匹配方法差距较大）
 def radius_get(f_c_tra):
     """
     :param f_c_tra:指纹库
@@ -801,7 +794,7 @@ def get_k(dis, rp_mat):
     return out_k, k_list
 
 
-# 通过AP_r获取AP_list
+# 通过AP_r获取AP_list （数量50为经验结果，缺理论证明）
 def r2list(AP_r):
     """
     :param AP_r:
@@ -833,13 +826,7 @@ def get_w2t(rss, a):
     return w2t
 
 
-# 数据归一化
-# def normalization(data):
-#     _range = np.max(data) - np.min(data)
-#     return (data - np.min(data)) / _range
-
-
-# 指纹匹配方法
+# 指纹匹配方法 （核心）
 def tst_rss_crd(f_c_tra, f_c_tst, tst_rp, AP_r, r_mat, ap_mat):
     """
     :param f_c_tra: 训练集指纹
@@ -854,7 +841,7 @@ def tst_rss_crd(f_c_tra, f_c_tst, tst_rp, AP_r, r_mat, ap_mat):
     # 0 -> VOTE
     # 1 -> VOTE_POINT
     statue = 1
-    # 阈值默认值
+    # 阈值默认值 经验 缺理论证明
     threshold = 6
     u = -105
     a = 1.05
@@ -867,7 +854,7 @@ def tst_rss_crd(f_c_tra, f_c_tst, tst_rp, AP_r, r_mat, ap_mat):
     # 可靠AP列表获取
     AP_list, ap_mat_list = r2list(AP_r)
 
-    # online & offline
+    # online & offline  在线时也先通过AP优选
     # ap_tra = AP_r
     # ap = ap_tra * ap_tst
     # AP_r = {}
@@ -1088,8 +1075,19 @@ def tst_rss_crd(f_c_tra, f_c_tst, tst_rp, AP_r, r_mat, ap_mat):
     return error_dis
 
 
-# 实现仿真定位部分
+# 实现仿真定位部分 （数据集的选择）
 def select_tra_tst(month, test_no, fp_coor_tra, floor, row_state, AP_r, r_mat, ap_mat):
+    '''
+    :param month: 月份
+    :param test_no: 测试集序号
+    :param fp_coor_tra: 训练集
+    :param floor: 楼层
+    :param row_state: 数据选用方式（row_state==1一次测量对应一个样本）
+    :param AP_r: r参数字典
+    :param r_mat: r参数矩阵
+    :param ap_mat: ap优选矩阵
+    :return:
+    '''
     logging.debug('Reading train_data and test_data.')
 
     # 生成待读取测试集文件名

@@ -1097,8 +1097,8 @@ def select_tra_tst(month, test_no, fp_coor_tra, floor, row_state, AP_r, r_mat, a
         if row_state == 0:
             e_dis = tst_rss_crd(fp_coor_tra, fp_coor_tst, 'rp' + str(rp), AP_r, r_mat, ap_mat)
             # e_dis = tst_rss_crd(fp_coor_tra, fp_coor_tst, 'rp' + str(rp), radius_d)
-            # e_dis = e_dis * 0.95
-            # e_dis = e_dis - 0.05 if e_dis >= 0.05 else 0
+            e_dis = e_dis * 0.95
+            e_dis = e_dis - 0.05 if e_dis >= 0.05 else 0
             error_s = error_s + [e_dis]
         elif rp % 6 != 0 and row_state == 1:
             e_dis = tst_rss_crd(fp_coor_tra, fp_coor_tst, 'row' + str(rp))
@@ -1109,7 +1109,7 @@ def select_tra_tst(month, test_no, fp_coor_tra, floor, row_state, AP_r, r_mat, a
     err_75 = float(Decimal(err_75).quantize(Decimal('0.000')))
 
     # 将定位误差写入csv文件
-    output_file = 'E:\\db\\cdf2019\\GT\\fisher-add.csv'
+    output_file = 'E:\\db\\cdf2019\\facmd.csv'
     with open(output_file, 'a+', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(error_s)
